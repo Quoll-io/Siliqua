@@ -24,8 +24,9 @@ Set multiple actions for a double tap and a quad tap.
 
 ## Licence
 
-### IDGAHBPGC
-**(I don't give a hoot but please give credit)**
+### IDGAFBPGC
+**(I don't give a f*ck but please give credit)**
+
 Do what ever you want as long as the following conditions are met:
 
 * Any program using any of this code must be free.
