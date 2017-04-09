@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+	<dict>
+		<key>cell</key>
+		<string>PSGroupCell</string>
+		<key>footerCellClass</key>
+		<string>SiliquaBannerCell</string>
+	</dict>
+	<dict>
+		<key>cell</key>
+		<string>PSGroupCell</string>
+		<key>label</key>
+		<string>Configuration</string>
+	</dict>
+	<dict>
+		<key>cell</key>
+		<string>PSSwitchCell</string>
+		<key>default</key>
+		<true/>
+		<key>defaults</key>
+		<string>com.laughingquoll.siliquaprefs</string>
+		<key>key</key>
+		<string>enabled</string>
+		<key>label</key>
+		<string>Enabled</string>
+	</dict>
+	<dict>
+		<key>cell</key>
+		<string>PSGroupCell</string>
+		<key>label</key>
+		<string></string>
+	</dict>
+	<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>DoubleTapListController</string>
+			<key>label</key>
+			<string>Double Tap Actions</string>
+	</dict>
+
+	<dict>
+		<key>cell</key>
+		<string>PSGroupCell</string>
+		<key>label</key>
+		<string></string>
+	</dict>
+	<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>QuadTapListController</string>
+			<key>label</key>
+			<string>Quadruple Tap Actions</string>
+	</dict>
+	</array>
+	<key>title</key>
+	<string>Siliqua</string>
+</dict>
+</plist>
