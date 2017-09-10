@@ -4,6 +4,8 @@
 // Collect our headers. We don't need many.
 
 #import "MediaRemote.h"
+#import "NSTimer+Blocks.h"
+
 @interface NSTimer (Private){
 
 }
@@ -71,6 +73,19 @@ bool qtToggleSiri;
 -(void)dismissAssistantView:(long long)arg1 forAlertActivation:(id)arg2 ;
 @end
 
+static BOOL isShowingAss(){ //;)
+    SBAssistantController *assistantController = [%c(SBAssistantController) sharedInstance];
+    if ([%c(SBAssistantController) respondsToSelector:@selector(participantState)]){
+        if ((int)[assistantController participantState] == 1)
+            return NO;
+        return YES;
+    } else {
+        if (![%c(SBAssistantController) isAssistantVisible])
+            return NO;
+        return YES;
+    }
+}
+
 %hook SBHomeScreenViewController
 // This hook will run our actions, whatever they are.
 static BOOL justTapped = NO;
@@ -88,106 +103,104 @@ static NSTimer *timer;
         // Credits to Finn Gaida who created quad tap for me :P
         if (justTapped) {
             // quad tap action
-
+            
             if(qtPausePlay){
-            MRMediaRemoteSendCommand(kMRTogglePlayPause, 0);
+                MRMediaRemoteSendCommand(kMRTogglePlayPause, 0);
             }
-
+            
             if(qtSkip){
-            MRMediaRemoteSendCommand(kMRNextTrack, 0);
+                MRMediaRemoteSendCommand(kMRNextTrack, 0);
             }
-
+            
             if(qtRewind){
-            MRMediaRemoteSendCommand(kMRPreviousTrack, 0);
+                MRMediaRemoteSendCommand(kMRPreviousTrack, 0);
             }
-
+            
             if(qtSkip15){
-              // Both don't seem to work, looking for alternatives?
-              // [[%c(SBMediaController) sharedInstance] skipFifteenSeconds:+15];
-              // MRMediaRemoteSendCommand(kMRSkipFifteenSeconds, 0);
-              [[%c(SBMediaController) sharedInstance] _sendMediaCommand:17];
+                // Both don't seem to work, looking for alternatives?
+                // [[%c(SBMediaController) sharedInstance] skipFifteenSeconds:+15];
+                // MRMediaRemoteSendCommand(kMRSkipFifteenSeconds, 0);
+                [[%c(SBMediaController) sharedInstance] _sendMediaCommand:17];
             }
-
+            
             if(qtRewind15){
-              // Both don't seem to work, looking for alternatives?
-              // [[%c(SBMediaController) sharedInstance] skipFifteenSeconds:-15];
-              // MRMediaRemoteSendCommand(kMRGoBackFifteenSeconds, 0);
-              [[%c(SBMediaController) sharedInstance] _sendMediaCommand:18];
+                // Both don't seem to work, looking for alternatives?
+                // [[%c(SBMediaController) sharedInstance] skipFifteenSeconds:-15];
+                // MRMediaRemoteSendCommand(kMRGoBackFifteenSeconds, 0);
+                [[%c(SBMediaController) sharedInstance] _sendMediaCommand:18];
             }
-
+            
             if(qtIncreaseVolume){
-              [[%c(SBMediaController) sharedInstance] _changeVolumeBy:0.1];
+                [[%c(SBMediaController) sharedInstance] _changeVolumeBy:0.1];
             }
-
+            
             if(qtDecreaseVolume){
-              [[%c(SBMediaController) sharedInstance] _changeVolumeBy:-0.1];
+                [[%c(SBMediaController) sharedInstance] _changeVolumeBy:-0.1];
             }
-
+            
             if(qtToggleSiri){
-              SBAssistantController *assistantController = [%c(SBAssistantController) sharedInstance];
-
-              if((int)[assistantController participantState] == 1){
-                [assistantController handleSiriButtonDownEventFromSource:1 activationEvent:1];
-                [assistantController handleSiriButtonUpEventFromSource:1];
-              } else {
-                [assistantController dismissAssistantView:1 forAlertActivation:nil];
-              }
+                SBAssistantController *assistantController = [%c(SBAssistantController) sharedInstance];
+                if(!isShowingAss()){
+                    [assistantController handleSiriButtonDownEventFromSource:1 activationEvent:1];
+                    [assistantController handleSiriButtonUpEventFromSource:1];
+                } else {
+                    [assistantController dismissAssistantView:1 forAlertActivation:nil];
+                }
             }
-
+            
             [timer invalidate];
             justTapped = NO;
         } else {
             justTapped = YES;
-            timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:NO block:^(NSTimer * _Nonnull timer) {
-
+            timer = [NSTimer scheduledTimerWithTimeInterval:0.6 block:^{
+                
                 if(dtPausePlay){
-                MRMediaRemoteSendCommand(kMRTogglePlayPause, 0);
+                    MRMediaRemoteSendCommand(kMRTogglePlayPause, 0);
                 }
-
+                
                 if(dtSkip){
-                MRMediaRemoteSendCommand(kMRNextTrack, 0);
+                    MRMediaRemoteSendCommand(kMRNextTrack, 0);
                 }
-
+                
                 if(dtRewind){
-                MRMediaRemoteSendCommand(kMRPreviousTrack, 0);
+                    MRMediaRemoteSendCommand(kMRPreviousTrack, 0);
                 }
-
+                
                 if(dtSkip15){
-                  // Both don't seem to work, looking for alternatives?
-                  // [[%c(SBMediaController) sharedInstance] skipFifteenSeconds:+15];
-                  // MRMediaRemoteSendCommand(kMRSkipFifteenSeconds, 0);
-                  [[%c(SBMediaController) sharedInstance] _sendMediaCommand:17];
+                    // Both don't seem to work, looking for alternatives?
+                    // [[%c(SBMediaController) sharedInstance] skipFifteenSeconds:+15];
+                    // MRMediaRemoteSendCommand(kMRSkipFifteenSeconds, 0);
+                    [[%c(SBMediaController) sharedInstance] _sendMediaCommand:17];
                 }
-
+                
                 if(dtRewind15){
-                  // Both don't seem to work, looking for alternatives?
-                  // [[%c(SBMediaController) sharedInstance] skipFifteenSeconds:-15];
-                  // MRMediaRemoteSendCommand(kMRGoBackFifteenSeconds, 0);
-                  [[%c(SBMediaController) sharedInstance] _sendMediaCommand:18];
+                    // Both don't seem to work, looking for alternatives?
+                    // [[%c(SBMediaController) sharedInstance] skipFifteenSeconds:-15];
+                    // MRMediaRemoteSendCommand(kMRGoBackFifteenSeconds, 0);
+                    [[%c(SBMediaController) sharedInstance] _sendMediaCommand:18];
                 }
-
+                
                 if(dtIncreaseVolume){
-                  [[%c(SBMediaController) sharedInstance] _changeVolumeBy:0.1];
+                    [[%c(SBMediaController) sharedInstance] _changeVolumeBy:0.1];
                 }
-
+                
                 if(dtDecreaseVolume){
-                  [[%c(SBMediaController) sharedInstance] _changeVolumeBy:-0.1];
+                    [[%c(SBMediaController) sharedInstance] _changeVolumeBy:-0.1];
                 }
-
+                
                 if(dtToggleSiri){
-
-                  SBAssistantController *assistantController = [%c(SBAssistantController) sharedInstance];
-                  if((int)[assistantController participantState] == 1){
-                    [assistantController handleSiriButtonDownEventFromSource:1 activationEvent:1];
-                    [assistantController handleSiriButtonUpEventFromSource:1];
-                  } else {
-                    [assistantController dismissAssistantView:1 forAlertActivation:nil];
-                  }
-
+                    
+                    SBAssistantController *assistantController = [%c(SBAssistantController) sharedInstance];
+                    if(!isShowingAss()){
+                        [assistantController handleSiriButtonDownEventFromSource:1 activationEvent:1];
+                        [assistantController handleSiriButtonUpEventFromSource:1];
+                    } else {
+                        [assistantController dismissAssistantView:1 forAlertActivation:nil];
+                    }
                 }
-
+                
                 justTapped = NO;
-            }];
+            } repeats:NO];
         }
     }
 }
